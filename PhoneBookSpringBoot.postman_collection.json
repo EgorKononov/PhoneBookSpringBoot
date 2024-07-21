@@ -1,0 +1,42 @@
+{
+	"info": {
+		"_postman_id": "7483bbdf-2c78-4b62-a232-0566939a0ab9",
+		"name": "PhoneBookSpringBoot",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37029112"
+	},
+	"item": [
+		{
+			"name": "getContacts",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "getContactsTerm",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "addContact",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "deleteContact",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
