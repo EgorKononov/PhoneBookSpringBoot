@@ -1,7 +1,8 @@
 package ru.academits.java.kononov.phonebookspringboot.dao;
 
 import org.springframework.stereotype.Repository;
-import ru.academits.java.kononov.phonebookspringboot.exceptions.ValidationException;
+import ru.academits.java.kononov.phonebookspringboot.dto.Contact;
+import ru.academits.java.kononov.phonebookspringboot.exception.ValidationException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +17,12 @@ public class ContactsInMemoryRepository implements ContactsRepository {
 
     @Override
     public List<Contact> getContacts(String term) throws ValidationException {
-        if (term == null || term.trim().isEmpty()) {
+        if (term == null || term.isBlank()) {
             synchronized (contacts) {
                 return new ArrayList<>(contacts.values());
             }
         } else {
-            String termUpperCase = term.toUpperCase();
+            String termUpperCase = term.toUpperCase().trim();
 
             synchronized (contacts) {
                 return contacts.values().stream().filter(contact ->
@@ -71,7 +72,7 @@ public class ContactsInMemoryRepository implements ContactsRepository {
     public void deleteContact(int id) throws ValidationException {
         synchronized (contacts) {
             if (contacts.remove(id) == null) {
-                throw new ValidationException("Contact not found");
+                throw new ValidationException("Contact with id=[" + id + "] not found");
             }
         }
     }

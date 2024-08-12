@@ -3,8 +3,8 @@ package ru.academits.java.kononov.phonebookspringboot.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import ru.academits.java.kononov.phonebookspringboot.dao.Contact;
-import ru.academits.java.kononov.phonebookspringboot.exceptions.ValidationException;
+import ru.academits.java.kononov.phonebookspringboot.dto.Contact;
+import ru.academits.java.kononov.phonebookspringboot.exception.ValidationException;
 import ru.academits.java.kononov.phonebookspringboot.service.ContactsService;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class ContactsController {
     }
 
     @GetMapping
-    public List<Contact> getContacts(@RequestParam(required = false) String term){
+    public List<Contact> getContacts(@RequestParam(required = false) String term) {
         try {
             return contactsService.getContacts(term);
         } catch (ValidationException e) {
@@ -28,7 +28,7 @@ public class ContactsController {
     }
 
     @PostMapping
-    public void addContact(@RequestBody Contact contact){
+    public void addContact(@RequestBody Contact contact) {
         try {
             contactsService.addContact(contact);
         } catch (ValidationException e) {
@@ -37,7 +37,7 @@ public class ContactsController {
     }
 
     @DeleteMapping
-    public void deleteContact(@RequestParam int id){
+    public void deleteContact(@RequestParam int id) {
         try {
             contactsService.deleteContact(id);
         } catch (ValidationException e) {

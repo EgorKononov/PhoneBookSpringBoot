@@ -1,4 +1,4 @@
-package ru.academits.java.kononov.phonebookspringboot.dao;
+package ru.academits.java.kononov.phonebookspringboot.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

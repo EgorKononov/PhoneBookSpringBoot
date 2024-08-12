@@ -1,9 +1,9 @@
 package ru.academits.java.kononov.phonebookspringboot.service;
 
 import org.springframework.stereotype.Service;
-import ru.academits.java.kononov.phonebookspringboot.dao.Contact;
+import ru.academits.java.kononov.phonebookspringboot.dto.Contact;
 import ru.academits.java.kononov.phonebookspringboot.dao.ContactsRepository;
-import ru.academits.java.kononov.phonebookspringboot.exceptions.ValidationException;
+import ru.academits.java.kononov.phonebookspringboot.exception.ValidationException;
 
 import java.util.List;
 
