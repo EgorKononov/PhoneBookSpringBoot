@@ -11,6 +11,4 @@ public interface ContactsRepository {
     void addContact(Contact contact) throws ValidationException;
 
     void deleteContact(int id) throws ValidationException;
-
-    void deleteRandomContact() throws ValidationException;
 }

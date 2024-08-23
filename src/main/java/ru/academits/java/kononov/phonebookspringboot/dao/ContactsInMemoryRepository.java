@@ -24,13 +24,13 @@ public class ContactsInMemoryRepository implements ContactsRepository {
                 contactList = new ArrayList<>(contacts.values());
             }
         } else {
-            String termUpperCase = term.toUpperCase().trim();
+            String termUpperCaseTrim = term.toUpperCase().trim();
 
             synchronized (contacts) {
                 contactList = contacts.values().stream().filter(contact ->
-                        contact.getFirstName().toUpperCase().contains(termUpperCase) ||
-                                contact.getLastName().toUpperCase().contains(termUpperCase) ||
-                                Long.toString(contact.getPhoneNumber()).contains(termUpperCase)
+                        contact.getFirstName().toUpperCase().contains(termUpperCaseTrim) ||
+                                contact.getLastName().toUpperCase().contains(termUpperCaseTrim) ||
+                                contact.getPhoneNumber().contains(termUpperCaseTrim)
                 ).toList();
             }
         }
@@ -49,9 +49,9 @@ public class ContactsInMemoryRepository implements ContactsRepository {
 
             Contact newContact = new Contact(
                     contactId,
-                    contact.getFirstName(),
-                    contact.getLastName(),
-                    contact.getPhoneNumber());
+                    contact.getFirstName().trim(),
+                    contact.getLastName().trim(),
+                    contact.getPhoneNumber().trim());
 
             contacts.put(contactId, newContact);
 
@@ -64,16 +64,29 @@ public class ContactsInMemoryRepository implements ContactsRepository {
             throw new ValidationException("Contact cannot be null");
         }
 
-        if (contact.getFirstName() == null || contact.getFirstName().trim().isEmpty()) {
-            throw new ValidationException("Contact first name cannot be empty");
-        }
+        validateForEmpty(contact.getFirstName(), "first name");
+        validateForEmpty(contact.getLastName(), "last name");
+        validatePhoneNumber(contact);
+    }
 
-        if (contact.getLastName() == null || contact.getLastName().trim().isEmpty()) {
-            throw new ValidationException("Contact last name cannot be empty");
+    private static void validateForEmpty(String fieldName, String fieldValue) throws ValidationException {
+        if (fieldValue == null || fieldValue.isBlank()) {
+            throw new ValidationException("Contact " + fieldName + " cannot be empty");
         }
+    }
 
-        if (contact.getPhoneNumber() == null) {
-            throw new ValidationException("Contact phone number cannot be empty");
+    private static void validatePhoneNumber(Contact contact) throws ValidationException {
+        validateForEmpty(contact.getPhoneNumber(), "phone number");
+        String phoneNumberTrim = contact.getPhoneNumber().trim();
+
+        synchronized (contacts) {
+            Optional<Contact> contactWithSamePhoneNumber = contacts.values().stream()
+                    .filter(currentContact -> Objects.equals(currentContact.getPhoneNumber(), phoneNumberTrim))
+                    .findFirst();
+
+            if (contactWithSamePhoneNumber.isPresent()) {
+                throw new ValidationException("Contact with phone number [" + phoneNumberTrim + "] already exists");
+            }
         }
     }
 
@@ -81,27 +94,10 @@ public class ContactsInMemoryRepository implements ContactsRepository {
     public void deleteContact(int id) throws ValidationException {
         synchronized (contacts) {
             Contact removed = contacts.remove(id);
-            log.info("Contact removed: {}", removed);
+            log.info("Contact has been deleted: {}", removed);
 
             if (removed == null) {
                 throw new ValidationException("Contact with id=[" + id + "] not found");
-            }
-        }
-    }
-
-    @Override
-    public void deleteRandomContact() throws ValidationException {
-        synchronized (contacts) {
-            if (!contacts.isEmpty()) {
-                Set<Integer> keySet = contacts.keySet();
-                keySet.stream().skip(new Random().nextInt(keySet.size()))
-                        .findFirst()
-                        .ifPresent(key -> {
-                            Contact removed = contacts.remove(key);
-                            log.info("Random contact deleted: {}", removed);
-                        });
-            } else {
-                log.info("Unable to delete random contact: no contacts found");
             }
         }
     }
