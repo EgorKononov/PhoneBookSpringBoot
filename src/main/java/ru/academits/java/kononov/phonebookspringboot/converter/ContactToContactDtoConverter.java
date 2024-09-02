@@ -1,7 +1,7 @@
 package ru.academits.java.kononov.phonebookspringboot.converter;
 
 import org.springframework.stereotype.Service;
-import ru.academits.java.kononov.phonebookspringboot.dto.Contact;
+import ru.academits.java.kononov.phonebookspringboot.dao.Contact;
 import ru.academits.java.kononov.phonebookspringboot.dto.ContactDto;
 
 @Service

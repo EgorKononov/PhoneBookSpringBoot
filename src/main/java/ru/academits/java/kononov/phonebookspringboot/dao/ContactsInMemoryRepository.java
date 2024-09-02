@@ -2,7 +2,6 @@ package ru.academits.java.kononov.phonebookspringboot.dao;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import ru.academits.java.kononov.phonebookspringboot.dto.Contact;
 import ru.academits.java.kononov.phonebookspringboot.exception.ValidationException;
 
 import java.util.*;
@@ -16,18 +15,18 @@ public class ContactsInMemoryRepository implements ContactsRepository {
     private static final AtomicInteger currentId = new AtomicInteger(1);
 
     @Override
-    public List<Contact> getContacts(String term) throws ValidationException {
-        List<Contact> contactList;
+    public List<Contact> getContacts(String term) {
+        List<Contact> contactsList;
 
         if (term == null || term.isBlank()) {
             synchronized (contacts) {
-                contactList = new ArrayList<>(contacts.values());
+                contactsList = new ArrayList<>(contacts.values());
             }
         } else {
             String termUpperCaseTrim = term.toUpperCase().trim();
 
             synchronized (contacts) {
-                contactList = contacts.values().stream().filter(contact ->
+                contactsList = contacts.values().stream().filter(contact ->
                         contact.getFirstName().toUpperCase().contains(termUpperCaseTrim) ||
                                 contact.getLastName().toUpperCase().contains(termUpperCaseTrim) ||
                                 contact.getPhoneNumber().contains(termUpperCaseTrim)
@@ -35,9 +34,9 @@ public class ContactsInMemoryRepository implements ContactsRepository {
             }
         }
 
-        log.info("Contacts for term [{}] given {} ", term, contactList);
+        log.info("Contacts for term [{}] given {} ", term, contactsList);
 
-        return contactList;
+        return contactsList;
     }
 
     @Override
@@ -66,7 +65,7 @@ public class ContactsInMemoryRepository implements ContactsRepository {
 
         validateForEmpty(contact.getFirstName(), "first name");
         validateForEmpty(contact.getLastName(), "last name");
-        validatePhoneNumber(contact);
+        validatePhoneNumberForEmptyAndUnique(contact);
     }
 
     private static void validateForEmpty(String fieldName, String fieldValue) throws ValidationException {
@@ -75,7 +74,7 @@ public class ContactsInMemoryRepository implements ContactsRepository {
         }
     }
 
-    private static void validatePhoneNumber(Contact contact) throws ValidationException {
+    private static void validatePhoneNumberForEmptyAndUnique(Contact contact) throws ValidationException {
         validateForEmpty(contact.getPhoneNumber(), "phone number");
         String phoneNumberTrim = contact.getPhoneNumber().trim();
 
@@ -93,10 +92,10 @@ public class ContactsInMemoryRepository implements ContactsRepository {
     @Override
     public void deleteContact(int id) throws ValidationException {
         synchronized (contacts) {
-            Contact removed = contacts.remove(id);
-            log.info("Contact has been deleted: {}", removed);
+            Contact removedContact = contacts.remove(id);
+            log.info("Contact has been deleted: {}", removedContact);
 
-            if (removed == null) {
+            if (removedContact == null) {
                 throw new ValidationException("Contact with id=[" + id + "] not found");
             }
         }

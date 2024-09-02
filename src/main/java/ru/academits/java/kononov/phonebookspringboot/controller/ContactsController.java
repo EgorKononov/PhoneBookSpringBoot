@@ -47,12 +47,6 @@ public class ContactsController {
         }
     }
 
-    private static BaseResponse handleValidationException(ValidationException e) {
-        log.error("ValidationException: {}", e.getMessage(), e);
-
-        return BaseResponse.createErrorResponse(e.getMessage());
-    }
-
     @DeleteMapping
     public BaseResponse deleteContact(@RequestParam int id) {
         try {
@@ -62,5 +56,11 @@ public class ContactsController {
         } catch (ValidationException e) {
             return handleValidationException(e);
         }
+    }
+
+    private static BaseResponse handleValidationException(ValidationException e) {
+        log.error("ValidationException: {}", e.getMessage(), e);
+
+        return BaseResponse.createErrorResponse(e.getMessage());
     }
 }
