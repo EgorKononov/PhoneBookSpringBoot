@@ -65,7 +65,7 @@ public class ContactsInMemoryRepository implements ContactsRepository {
 
         validateForEmpty(contact.getFirstName(), "first name");
         validateForEmpty(contact.getLastName(), "last name");
-        validatePhoneNumberForEmptyAndUnique(contact);
+        validatePhoneNumberForEmptyAndUnique(contact.getPhoneNumber());
     }
 
     private static void validateForEmpty(String fieldName, String fieldValue) throws ValidationException {
@@ -74,9 +74,9 @@ public class ContactsInMemoryRepository implements ContactsRepository {
         }
     }
 
-    private static void validatePhoneNumberForEmptyAndUnique(Contact contact) throws ValidationException {
-        validateForEmpty(contact.getPhoneNumber(), "phone number");
-        String phoneNumberTrim = contact.getPhoneNumber().trim();
+    private static void validatePhoneNumberForEmptyAndUnique(String phoneNumber) throws ValidationException {
+        validateForEmpty(phoneNumber, "phone number");
+        String phoneNumberTrim = phoneNumber.trim();
 
         synchronized (contacts) {
             Optional<Contact> contactWithSamePhoneNumber = contacts.values().stream()
